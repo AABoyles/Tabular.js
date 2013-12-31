@@ -21,8 +21,8 @@ $(function() {
 		 */
 		table2CSV : function(delim) {
 			var ret = [];
-			this.each(function() {
-				ret.push(tabular.table2CSV(this, delim));
+			this.each(function(el) {
+				ret.push(tabular.table2CSV(el, delim));
 			});
 			return ret;
 		},
