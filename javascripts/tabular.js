@@ -57,7 +57,7 @@ tabular.table2Object = function(table) {
  * 	large numeral readability, etc.
  */
 tabular.table2CSV = function(table, delim) {
-	table = tabular.table2Array();
+  table = tabular.table2Array();
   if (!delim) {
     delim = ",";
   }
