@@ -98,8 +98,33 @@ tabular.table2CSVURL = function(table, format) {
  * 		[OPTIONAL] delim - a Delimiter String, defaults to comma (,)
  * 		[OPTIONAL] headers - Does this CSV String include a row of headers?
  */
+tabular.csv2Array = function(csv, delim, headers) {
+  var tableArray = tabular.csv2Array(csv);
+  if (headers !== false) {
+    headers = true;
+  }
+  var table = "<table><thead>";
+  var i = 0;
+  if (headers) {
+    table += "<tr><th>" + tableArray[i++].join("</th><th>") + "</th></tr>";
+  }
+  table += "</thead><tbody>";
+  for (i; i < tableArray.length; i++) {
+    table += "<tr><td>" + tableArray[i].join("</td><td>") + "</td></tr>";
+  }
+  return table += "</tbody><tfoot></tfoot></table>";
+};
+
+/*
+ * csv2Table
+ * 	Given a CSV String, Return an HTML Table String.
+ * 	Arguments:
+ * 		csv - a CSV String
+ * 		[OPTIONAL] delim - a Delimiter String, defaults to comma (,)
+ * 		[OPTIONAL] headers - Does this CSV String include a row of headers?
+ */
 tabular.csv2Table = function(csv, delim, headers) {
-  var tableArray = tabular.csv2Array(csv.trim());
+  var tableArray = tabular.csv2Array(csv);
   if (headers !== false) {
     headers = true;
   }
@@ -117,7 +142,7 @@ tabular.csv2Table = function(csv, delim, headers) {
 
 tabular.csv2Object = function(csv) {
 
-}
+};
 
 tabular.parser = {};
 tabular.parser.RELAXED = true;
