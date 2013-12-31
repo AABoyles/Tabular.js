@@ -1,17 +1,25 @@
+
+
+<!--  Welcome to the source code!  I'm glad you found this! -TB -->
+
 <!DOCTYPE html>
 <html>
 	<head>
-<title>CSV2Table</title>
-<script src="//codeorigin.jquery.com/jquery-2.0.3.min.js"></script>
-<script src="../js/tabular.js"></script>
-<script src="../js/tabular.jQuery.js"></script>
-<script>
-$(function(){
-	$("body").csv2Table();
-});
-</script>
+		<title>CSV2Table</title>
+
+<!-- To Start, let's pull in jQuery, Tabular.js, and the Tabular jQuery plugin --> 
+
+		<script src="//codeorigin.jquery.com/jquery-2.0.3.min.js"></script>
+		<script src="../javascripts/tabular.js"></script>
+		<script src="../javascripts/tabular.jQuery.js"></script>
 	</head>
 	<body>
+		<span>Looks like an ordinary table, right?  <a onClick='window.location="view-source:" + window.location.href'>View the Source Code</a> to see the magic!</span>
+
+<!-- So far, so good.  Now, check this out: it's plain CSV text that was just
+	pasted into a <pre> tag -->
+
+		<pre>
 Country,Year,DemographicPressures,RefugeesandIDPs,GroupGrievance,HumanFlight,UnevenDevelopment,PovertyandDecline,LegitimacyoftheState,PublicServices,HumanRightsandRuleofLaw,SecurityApparatus,FactionalizedElites,ExternalIntervention,Total
 Afghanistan,2005,9,8,8,7.4,8.8,7.5,8.1,8.1,7.9,8.2,8,10,99
 Afghanistan,2006,7.9,9.6,9.1,7,8,7.5,8.3,8,8.2,8.2,8,10,99.8
@@ -1298,5 +1306,19 @@ Zimbabwe,2009,9.8,9.1,9.1,10,9.7,10,9.8,9.8,9.9,9.7,9.5,7.6,114
 Zimbabwe,2010,9.4,8.6,8.8,9.7,9.4,9.6,9.6,9.4,9.5,9.2,9.5,7.5,110.2
 Zimbabwe,2011,9.3,8.2,9,9.3,9.2,9,9.3,9,9.2,9,9.6,7.8,107.9
 Zimbabwe,2012,9,8.4449635228,8.7,9,8.9,8.875,9.4,9.1,8.9,8.7,9.8,7.5,106.3199635228
+		</pre>
+		
+<!-- What just happened?  All I see is CSV!  Where's all the <table> stuff? -->
+
+		<script>
+			$(function(){
+				$("pre").csv2Table();
+			});
+		</script>
+		
+<!-- Ah, cool!  Here's an ordinary jQuery selector that grabs the <pre> tag,
+	parses its contents as CSV, transforms it to an HTML Table, and
+	overwrites the contents of the tag with the table. -->
+		
 	</body>
 </html>
