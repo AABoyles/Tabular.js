@@ -1,0 +1,88 @@
+<!doctype html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="chrome=1">
+		<title>Tabular.js by AABoyles</title>
+		<link rel="stylesheet" href="stylesheets/styles.css">
+		<link rel="stylesheet" href="stylesheets/pygment_trac.css">
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+		<script src="javascripts/main.js"></script>
+		<!--[if lt IE 9]>
+		<script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+		<![endif]-->
+		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+	</head>
+	<body>
+		<header>
+			<h1>Tabular.js</h1>
+			<p>A small Javascript library for playing with CSVs</p>
+		</header>
+		<div id="banner">
+			<span id="logo"></span>
+			<a href="https://github.com/AABoyles/Tabular.js" class="button fork"><strong>View On GitHub</strong></a>
+			<div class="downloads">
+				<span>Downloads:</span>
+				<ul>
+					<li>
+						<a href="https://github.com/AABoyles/Tabular.js/zipball/master" class="button">ZIP</a>
+					</li>
+					<li>
+						<a href="https://github.com/AABoyles/Tabular.js/tarball/master" class="button">TAR</a>
+					</li>
+				</ul>
+			</div>
+		</div><!-- end banner -->
+		<div class="wrapper">
+			<nav>
+				<ul></ul>
+			</nav>
+			<section>
+				<h1><a name="tabularjs" class="anchor" href="#tabularjs"><span class="octicon octicon-link"></span></a>Tabular.js</h1>
+				<p>A small Javascript library for playing with CSVs.</p>
+				<p>by <a href="http://aaboyles.com/">Tony Boyles</a> (<a href="mailto:AABoyles@gmail.com">AABoyles@gmail.com</a>)</p>
+				<p>Licensed under the GNU GPL 3 or later</p>
+
+				<h2><a name="use" class="anchor" href="#use"><span class="octicon octicon-link"></span></a>USE</h2>
+				<p>To Use Tabular.js, just source the library however you prefer:</p>
+				<pre><code>&lt;script src="tabular.js"&gt;&lt;/script&gt;</code></pre>
+				<p>And then access the power of tabular.js by calling the global object it creates (creatively called "tabular"):</p>
+				<pre><code>console.log(tabular);</code></pre>
+				<p>Try putting your tab-delimited data in an element you can select using Javascript:</p>
+				<pre><code>var container = document.getElementById("csv");
+var tabbedData = container.innerHTML;
+var tableHTML = tabular.csv2Table(tabbedData);
+container.innerHTML = tableHTML;
+</code></pre>
+				<p>If you use the jQuery plugin, you can cut that whole block to a single line:</p>
+				<pre><code>$("#csv").csv2Table();</code></pre>
+				<p>Full Documentation coming soon, but for now, here's what's implemented:</p>
+				<pre><code>tabular = {
+    table2Array: function(table){}, //Given a table element, return a 2-dimensional array
+    table2Object: function(table){}, //Given a table element, return an array of objects mapping the first row (presumably titles) to the given row's corresponding value
+    table2CSV: function(table){}, //Given a table Element, return a CSV string
+    table2CSVURL: function(table){}, //Given a table Element, return a URL-encoded version of the CSV string representation to allow downloading of the data direct from the browser (no server required)
+    csv2Table: function(csv, delim, headers){}, //Given a CSV string, a delimiter string, and a boolean indicating the presence of headers in the CSV string, return an HTML table string
+    csv2Array: function(csv, delim){}, //Not yet implemented
+    csv2Object: function(csv, delim){} //Not yet implemented
+}</code></pre>
+				<p>And here's what's currently available with the jQuery Plugin:</p>
+				<pre><code>$ = {
+    csv2Table: function(delim, headers){}, //Transforms the element upon which it was called into a table
+    table2CSV: function(delim){}, //Returns an array of each element selected, tables' contents CSV-encoded
+    downloadTable: function(format, send){} // Returns an array of URL-encoded CSV Strings for use in downloadable links.
+}</code></pre>
+
+				<h2><a name="license" class="anchor" href="#license"><span class="octicon octicon-link"></span></a>LICENSE</h2>
+				<div>
+					<p>This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.</p>
+					<p>This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the <a href="http://www.gnu.org/licenses/">GNU General Public License</a> for more details.</p>
+				</div>
+			</section>
+			<footer>
+				<p>Project maintained by <br /><a href="http://AABoyles.com">Tony Boyles</a></p>
+			</footer>
+		</div>
+		<!--[if !IE]><script>fixScale(document);</script><![endif]-->
+	</body>
+</html>
