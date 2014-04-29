@@ -1,0 +1,25 @@
+{
+  "name": "Tabular.js",
+  "version": "0.0.1",
+  "description": "A small Javascript library for playing with CSVs",
+  "main": "Gruntfile.js",
+  "directories": {
+    "example": "examples"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/AABoyles/Tabular.js.git"
+  },
+  "author": "Tony Boyles",
+  "license": "GNU GPL3 or Later",
+  "bugs": {
+    "url": "https://github.com/AABoyles/Tabular.js/issues"
+  },
+  "devDependencies": {
+    "grunt-contrib-uglify": "~0.4.0",
+    "grunt-contrib-watch": "~0.6.1"
+  }
+}
