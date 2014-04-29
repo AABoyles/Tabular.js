@@ -8,13 +8,17 @@ var sectionHeight = function() {
   } else {
     $section.css('height','auto');
   }
-}
+};
 
 $(window).resize(sectionHeight);
 
 $(document).ready(function(){
   $("section h1, section h2").each(function(){
-    $("nav ul").append("<li class='tag-" + this.nodeName.toLowerCase() + "'><a href='#" + $(this).text().toLowerCase().replace(/ /g, '-').replace(/[^\w-]+/g,'') + "'>" + $(this).text() + "</a></li>");
+  	var text = $(this).text();
+  	if(text.indexOf("(")>-1){
+  		text = text.slice(0,text.indexOf("("));
+  	}
+    $("nav ul").append("<li class='tag-" + this.nodeName.toLowerCase() + "'><a href='#" + $(this).text().toLowerCase().replace(/ /g, '-').replace(/[^\w-]+/g,'') + "'>" + text + "</a></li>");
     $(this).attr("id",$(this).text().toLowerCase().replace(/ /g, '-').replace(/[^\w-]+/g,''));
     $("nav ul li:first-child a").parent().addClass("active");
   });
