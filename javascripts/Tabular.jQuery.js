@@ -9,10 +9,11 @@ $(function() {
 		 */
 
 		csv2Table : function(delim, headers) {
-			return this.each(function() {
+			this.each(function() {
 				$this = jQuery(this);
 				$this.html(tabular.csv2Table($this.text(), delim, headers));
 			});
+			return this;
 		},
 
 		/*
