@@ -1,37 +1,120 @@
-<!DOCTYPE html>
-<html lang="en">
+<!doctype html>
+<html>
 	<head>
 		<meta charset="utf-8">
-		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-		<title>Tabular Examples</title>
-		<meta name="description" content="">
-		<meta name="author" content="Tony Boyles">
-		<meta name="viewport" content="width=device-width; initial-scale=1.0">
+		<meta http-equiv="X-UA-Compatible" content="chrome=1">
+		<title>Tabular.js by AABoyles</title>
+		<link rel="stylesheet" href="../stylesheets/styles.css">
+		<link rel="stylesheet" href="../stylesheets/pygment_trac.css">
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+		<script src="../javascripts/main.js"></script>
+		<!--[if lt IE 9]>
+		<script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+		<![endif]-->
+		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
 	</head>
-
 	<body>
-		<div>
-			<header>
-				<h1>index</h1>
-			</header>
-			<nav>
-				<p>
-					<a href="/">Home</a>
-				</p>
-				<p>
-					<a href="/contact">Contact</a>
-				</p>
-			</nav>
-
-			<div>
-
+		<header>
+			<h1><a href="http://aaboyles.com/Tabular.js" style="color:white;">Tabular.js</a></h1>
+			<p>A small Javascript library for playing with CSVs</p>
+		</header>
+		<div id="banner">
+			<span id="logo"></span>
+			<ul class="fork">
+				<li>
+					<a href="http://aaboyles.com/Tabular.js" class="button"><strong>Home</strong></a>
+				</li>
+				<li>
+					<a class="button"><strong>Documentation</strong></a>
+				</li>
+				<li>
+					<a href="../examples/" class="button"><strong>Examples</strong></a>
+				</li>
+				<li>
+					<a href="https://github.com/AABoyles/Tabular.js" class="button"><strong>View On GitHub</strong></a>	
+				</li>
+			</ul>
+			<div class="downloads">
+				<span>Downloads:</span>
+				<ul>
+					<li>
+						<a href="https://github.com/AABoyles/Tabular.js/zipball/master" class="button">ZIP</a>
+					</li>
+					<li>
+						<a href="https://github.com/AABoyles/Tabular.js/tarball/master" class="button">TAR</a>
+					</li>
+				</ul>
 			</div>
+		</div><!-- end banner -->
+		<div class="wrapper">
+			<nav>
+				<ul></ul>
+			</nav>
+			<section>
+				<h1><a name="tabularjs" class="anchor" href="#tabularjs"><span class="octicon octicon-link"></span></a>Documentation</h1>
 
+				<h2><a name="use" class="anchor" href="#use"><span class="octicon octicon-link"></span></a>Basic Usage</h2>
+				<p>To Use Tabular.js, just source the library however you prefer:</p>
+				<pre><code>&lt;script src="tabular.js"&gt;&lt;/script&gt;</code></pre>
+
+				<p>And then access the power of tabular.js by calling the global object it creates (creatively called "tabular"):</p>
+
+				<pre><code>console.log(tabular);</code></pre>
+
+				<p>Try putting your tab-delimited data in an element you can select using Javascript:</p>
+
+				<pre><code>var container = document.getElementById("csv");
+var tabbedData = container.innerHTML;
+var tableHTML = tabular.csv2Table(tabbedData);
+container.innerHTML = tableHTML;
+</code></pre>
+
+				<p>If you use the jQuery plugin, you can cut that whole block to a single line:</p>
+
+				<pre><code>$("#csv").csv2Table();</code></pre>
+
+				<h1><a name="Functions" class="anchor" href="#functions"><span class="octicon octicon-link"></span></a>Functions</h1>
+
+				<h2><a name="table2Array" class="anchor" href="#table2Array"><span class="octicon octicon-link"></span></a>table2Array(table)</h2>
+				<p>Given a table element, return a 2-dimensional array.</p>
+
+				<h2><a name="table2Object" class="anchor" href="#table2Object"><span class="octicon octicon-link"></span></a>table2Object(table)</h2>
+				<p>Given a table element, return an array of objects mapping the first row (presumably titles) to the given row's corresponding value.</p>
+
+				<h2><a name="table2CSV" class="anchor" href="#table2CSV"><span class="octicon octicon-link"></span></a>table2CSV(table)</h2>
+				<p>Given a table element, returns a CSV String.</p>
+
+				<h2><a name="table2CSVURL" class="anchor" href="#table2CSVURL"><span class="octicon octicon-link"></span></a>table2CSVURL(table)</h2>
+				<p>Given a table Element, return a URL-encoded version of the CSV string representation to allow downloading of the data direct from the browser (no server required).</p>
+
+				<h2><a name="csv2Table" class="anchor" href="#csv2Table"><span class="octicon octicon-link"></span></a>csv2Table(csv, delim, headers)</h2>
+				<p>Given a CSV string, a delimiter string, and a boolean indicating the presence of headers in the CSV string, return an HTML table string</p>
+
+				<h2><a name="csv2Array" class="anchor" href="#csv2Array"><span class="octicon octicon-link"></span></a>csv2Array(csv, delim)</h2>
+				<p><strong>This is NOT Implemented!</strong></p>
+				<p>Given a CSV string and a delimiter string, return a 2 dimensional javascript array.</p>
+
+				<h2><a name="csv2Object" class="anchor" href="#csv2Object"><span class="octicon octicon-link"></span></a>csv2Object(csv, delim)</h2>
+				<p><strong>This is NOT Implemented!</strong></p>
+				<p>Given a CSV string and a delimiter string, return a javascript object.</p>
+
+				<h1><a name="jQueryFunctions" class="anchor" href="#jqueryfunctions"><span class="octicon octicon-link"></span></a>jQuery Functions</h1>
+				<p>And here's what's currently available with the jQuery Plugin:</p>
+
+				<h2><a name="jQcsv2Table" class="anchor" href="#jQcsv2Table"><span class="octicon octicon-link"></span></a>csv2Table(delim, headers)</h2>
+				<p>Transforms the element upon which it was called into a table.  Assumes it contains CSV-parsable content.</p>
+
+				<h2><a name="jQtable2CSV" class="anchor" href="#jQtable2CSV"><span class="octicon octicon-link"></span></a>table2CSV(delim)</h2>
+				<p>Returns an array of each selected tables' CSV-encoded contents</p>
+
+				<h2><a name="jQdownloadTable" class="anchor" href="#jQdownloadTable"><span class="octicon octicon-link"></span></a>downloadTable(format, send)</h2>
+				<p>Returns an array of URL-encoded CSV Strings for use in downloadable links</p>
+
+			</section>
 			<footer>
-				<p>
-					&copy; Copyright  by Tony Boyles
-				</p>
+				<p>Project maintained by <br /><a href="http://AABoyles.com">Tony Boyles</a></p>
 			</footer>
 		</div>
+		<!--[if !IE]><script>fixScale(document);</script><![endif]-->
 	</body>
 </html>
