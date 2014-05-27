@@ -57,37 +57,21 @@ tabular.table2Object = function(table) {
  * 	large numeral readability, etc.
  */
 tabular.table2CSV = function(table, delim) {
-  table = tabular.table2Array();
-  if (!delim) {
-    delim = ",";
-  }
-  var regex = new RegExp(delim, "g");
+  delim = (typeof delim == "undefined") ? "," : delim;
+  var array = tabular.table2Array(table);
   var csv = "";
-  for (var i = 0; i < table.length; i++) {
-    for (var j = 0; j < table[i].length; j++) {
-      textcells[j] = table[i][j].replace(regex, "");
-    }
-    csv += textcells.join(delim) + "\n";
-  }
-  return csv;
+  array.forEach(function(row){
+  	csv += row.join(delim) + "\n";
+  });
+  return csv.slice(0,-1);
 };
 
 /*
  * table2CSVURL
  * 	Given a table element, returns a CSV-formatted, URI-encoded string.
  */
-tabular.table2CSVURL = function(table, format) {
-  if (!format) {
-    format = "csv";
-  }
-  var url = "data:";
-  switch (format) {
-    case "csv":
-    default:
-      url += "application/csv;charset=utf-8," + encodeURI(tabular.table2CSV(table));
-      break;
-  }
-  return url;
+tabular.table2CSVURL = function(table, delim) {
+  return "data:application/csv;charset=utf-8," + encodeURI(tabular.table2CSV(table, delim));
 };
 
 /*
@@ -99,7 +83,18 @@ tabular.table2CSVURL = function(table, format) {
  */
 tabular.csv2Array = function(csv, delim) {
 	COMMA = (typeof delim != "undefined") ? delim : ",";
-	tabular.parse(csv);
+	return tabular.parse(csv);
+};
+
+tabular.csv2ObjectArray = function(csv, delim) {
+	var data = tabular.parse(csv, delim);
+	return data.slice(1).map(function(row, i){
+		var temp = {};
+		for(j = 0; j < row.length; j++){
+			temp[data[0][j]] = row[j];
+		}
+		return temp;
+	});
 };
 
 /*
@@ -127,11 +122,6 @@ tabular.csv2Table = function(csv, delim, headers) {
   return table += "</tbody><tfoot></tfoot></table>";
 };
 
-tabular.csv2Object = function(csv) {
-
-};
-
-tabular.parser = {};
 tabular.RELAXED = true;
 tabular.IGNORE_RECORD_LENGTH = false;
 tabular.IGNORE_QUOTES = false;
@@ -169,7 +159,6 @@ tabular.parse = function(str) {
   tabular.offset = 0;
   tabular.str = str;
   tabular.record_begin();
-
   tabular.debug("parse()", str);
 
   var c;
@@ -362,6 +351,3 @@ tabular.warn = function(err) {
   } catch (e) {
   }
 };
-
-tabular.csv2Array = tabular.parse;
-tabular.parseCSV = tabular.parse;
