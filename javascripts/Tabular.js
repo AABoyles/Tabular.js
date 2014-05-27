@@ -91,28 +91,15 @@ tabular.table2CSVURL = function(table, format) {
 };
 
 /*
- * csv2Table
- * 	Given a CSV String, Return an HTML Table String.
+ * csv2Array
+ * 	Given a CSV String, Return a parsed array of Arrays.
  * 	Arguments:
  * 		csv - a CSV String
  * 		[OPTIONAL] delim - a Delimiter String, defaults to comma (,)
- * 		[OPTIONAL] headers - Does this CSV String include a row of headers?
  */
-tabular.csv2Array = function(csv, delim, headers) {
-  var tableArray = tabular.csv2Array(csv);
-  if (headers !== false) {
-    headers = true;
-  }
-  var table = "<table><thead>";
-  var i = 0;
-  if (headers) {
-    table += "<tr><th>" + tableArray[i++].join("</th><th>") + "</th></tr>";
-  }
-  table += "</thead><tbody>";
-  for (i; i < tableArray.length; i++) {
-    table += "<tr><td>" + tableArray[i].join("</td><td>") + "</td></tr>";
-  }
-  return table += "</tbody><tfoot></tfoot></table>";
+tabular.csv2Array = function(csv, delim) {
+	COMMA = (typeof delim != "undefined") ? delim : ",";
+	tabular.parse(csv);
 };
 
 /*
@@ -145,18 +132,18 @@ tabular.csv2Object = function(csv) {
 };
 
 tabular.parser = {};
-tabular.parser.RELAXED = true;
-tabular.parser.IGNORE_RECORD_LENGTH = false;
-tabular.parser.IGNORE_QUOTES = false;
-tabular.parser.LINE_FEED_OK = true;
-tabular.parser.CARRIAGE_RETURN_OK = true;
-tabular.parser.DETECT_TYPES = true;
-tabular.parser.IGNORE_QUOTE_WHITESPACE = true;
-tabular.parser.DEBUG = false;
-tabular.parser.ERROR_EOF = "UNEXPECTED_END_OF_FILE";
-tabular.parser.ERROR_CHAR = "UNEXPECTED_CHARACTER";
-tabular.parser.ERROR_EOL = "UNEXPECTED_END_OF_RECORD";
-tabular.parser.WARN_SPACE = "UNEXPECTED_WHITESPACE";
+tabular.RELAXED = true;
+tabular.IGNORE_RECORD_LENGTH = false;
+tabular.IGNORE_QUOTES = false;
+tabular.LINE_FEED_OK = true;
+tabular.CARRIAGE_RETURN_OK = true;
+tabular.DETECT_TYPES = true;
+tabular.IGNORE_QUOTE_WHITESPACE = true;
+tabular.DEBUG = false;
+tabular.ERROR_EOF = "UNEXPECTED_END_OF_FILE";
+tabular.ERROR_CHAR = "UNEXPECTED_CHARACTER";
+tabular.ERROR_EOL = "UNEXPECTED_END_OF_RECORD";
+tabular.WARN_SPACE = "UNEXPECTED_WHITESPACE";
 
 var QUOTE = "\"", CR = "\r", LF = "\n", COMMA = ",", SPACE = " ", TAB = "\t";
 
@@ -164,7 +151,7 @@ var QUOTE = "\"", CR = "\r", LF = "\n", COMMA = ",", SPACE = " ", TAB = "\t";
 var PRE_TOKEN = 0, MID_TOKEN = 1, POST_TOKEN = 2, POST_RECORD = 4;
 
 /**
- * @name tabular.parser.parse
+ * @name tabular.parse
  * @function
  * @description rfc4180 standard csv parse
  * with options for strictness and data type conversion
@@ -173,130 +160,130 @@ var PRE_TOKEN = 0, MID_TOKEN = 1, POST_TOKEN = 2, POST_RECORD = 4;
  * @return {Array} An array records, each of which is an array of scalar values.
  * @example
  * // simple
- * var rows = tabular.parser.parse("one,two,three\nfour,five,six")
+ * var rows = tabular.parse("one,two,three\nfour,five,six")
  * // rows equals [["one","two","three"],["four","five","six"]]
  * @see http://www.ietf.org/rfc/rfc4180.txt
  */
-tabular.parser.parse = function(str) {
-  var result = tabular.parser.result = [];
-  tabular.parser.offset = 0;
-  tabular.parser.str = str;
-  tabular.parser.record_begin();
+tabular.parse = function(str) {
+  var result = tabular.result = [];
+  tabular.offset = 0;
+  tabular.str = str;
+  tabular.record_begin();
 
-  tabular.parser.debug("parse()", str);
+  tabular.debug("parse()", str);
 
   var c;
   while (1) {
     // pull char
-    c = str[tabular.parser.offset++];
-    tabular.parser.debug("c", c);
+    c = str[tabular.offset++];
+    tabular.debug("c", c);
 
     // detect eof
     if (c == null) {
-      if (tabular.parser.escaped)
-        tabular.parser.error(tabular.parser.ERROR_EOF);
+      if (tabular.escaped)
+        tabular.error(tabular.ERROR_EOF);
 
-      if (tabular.parser.record) {
-        tabular.parser.token_end();
-        tabular.parser.record_end();
+      if (tabular.record) {
+        tabular.token_end();
+        tabular.record_end();
       }
 
-      tabular.parser.debug("...bail", c, tabular.parser.state, tabular.parser.record);
-      tabular.parser.reset();
+      tabular.debug("...bail", c, tabular.state, tabular.record);
+      tabular.reset();
       break;
     }
 
-    if (tabular.parser.record == null) {
+    if (tabular.record == null) {
       // if relaxed mode, ignore blank lines
-      if (tabular.parser.RELAXED && (c == LF || c == CR && str[tabular.parser.offset + 1] == LF)) {
+      if (tabular.RELAXED && (c == LF || c == CR && str[tabular.offset + 1] == LF)) {
         continue;
       }
-      tabular.parser.record_begin();
+      tabular.record_begin();
     }
 
     // pre-token: look for start of escape sequence
-    if (tabular.parser.state == PRE_TOKEN) {
+    if (tabular.state == PRE_TOKEN) {
 
-      if ((c === SPACE || c === TAB) && tabular.parser.next_nonspace() == QUOTE) {
-        if (tabular.parser.RELAXED || tabular.parser.IGNORE_QUOTE_WHITESPACE) {
+      if ((c === SPACE || c === TAB) && tabular.next_nonspace() == QUOTE) {
+        if (tabular.RELAXED || tabular.IGNORE_QUOTE_WHITESPACE) {
           continue;
         } else {
           // not technically an error, but ambiguous and hard to debug otherwise
-          tabular.parser.warn(tabular.parser.WARN_SPACE);
+          tabular.warn(tabular.WARN_SPACE);
         }
       }
 
-      if (c == QUOTE && !tabular.parser.IGNORE_QUOTES) {
-        tabular.parser.debug("...escaped start", c);
-        tabular.parser.escaped = true;
-        tabular.parser.state = MID_TOKEN;
+      if (c == QUOTE && !tabular.IGNORE_QUOTES) {
+        tabular.debug("...escaped start", c);
+        tabular.escaped = true;
+        tabular.state = MID_TOKEN;
         continue;
       }
-      tabular.parser.state = MID_TOKEN;
+      tabular.state = MID_TOKEN;
     }
 
     // mid-token and escaped, look for sequences and end quote
-    if (tabular.parser.state == MID_TOKEN && tabular.parser.escaped) {
+    if (tabular.state == MID_TOKEN && tabular.escaped) {
       if (c == QUOTE) {
-        if (str[tabular.parser.offset] == QUOTE) {
-          tabular.parser.debug("...escaped quote", c);
-          tabular.parser.token += QUOTE;
-          tabular.parser.offset++;
+        if (str[tabular.offset] == QUOTE) {
+          tabular.debug("...escaped quote", c);
+          tabular.token += QUOTE;
+          tabular.offset++;
         } else {
-          tabular.parser.debug("...escaped end", c);
-          tabular.parser.escaped = false;
-          tabular.parser.state = POST_TOKEN;
+          tabular.debug("...escaped end", c);
+          tabular.escaped = false;
+          tabular.state = POST_TOKEN;
         }
       } else {
-        tabular.parser.token += c;
-        tabular.parser.debug("...escaped add", c, tabular.parser.token);
+        tabular.token += c;
+        tabular.debug("...escaped add", c, tabular.token);
       }
       continue;
     }
 
     // fall-through: mid-token or post-token, not escaped
     if (c == CR) {
-      if (str[tabular.parser.offset] == LF)
-        tabular.parser.offset++;
-      else if (!tabular.parser.CARRIAGE_RETURN_OK)
-        tabular.parser.error(tabular.parser.ERROR_CHAR);
-      tabular.parser.token_end();
-      tabular.parser.record_end();
+      if (str[tabular.offset] == LF)
+        tabular.offset++;
+      else if (!tabular.CARRIAGE_RETURN_OK)
+        tabular.error(tabular.ERROR_CHAR);
+      tabular.token_end();
+      tabular.record_end();
     } else if (c == LF) {
-      if (!(tabular.parser.LINE_FEED_OK || tabular.parser.RELAXED))
-        tabular.parser.error(tabular.parser.ERROR_CHAR);
-      tabular.parser.token_end();
-      tabular.parser.record_end();
+      if (!(tabular.LINE_FEED_OK || tabular.RELAXED))
+        tabular.error(tabular.ERROR_CHAR);
+      tabular.token_end();
+      tabular.record_end();
     } else if (c == COMMA) {
-      tabular.parser.token_end();
-    } else if (tabular.parser.state == MID_TOKEN) {
-      tabular.parser.token += c;
-      tabular.parser.debug("...add", c, tabular.parser.token);
+      tabular.token_end();
+    } else if (tabular.state == MID_TOKEN) {
+      tabular.token += c;
+      tabular.debug("...add", c, tabular.token);
     } else if (c === SPACE || c === TAB) {
-      if (!tabular.parser.IGNORE_QUOTE_WHITESPACE)
-        tabular.parser.error(tabular.parser.WARN_SPACE);
-    } else if (!tabular.parser.RELAXED) {
-      tabular.parser.error(tabular.parser.ERROR_CHAR);
+      if (!tabular.IGNORE_QUOTE_WHITESPACE)
+        tabular.error(tabular.WARN_SPACE);
+    } else if (!tabular.RELAXED) {
+      tabular.error(tabular.ERROR_CHAR);
     }
   }
   return result;
 };
 
-tabular.parser.reset = function() {
-  tabular.parser.state = null;
-  tabular.parser.token = null;
-  tabular.parser.escaped = null;
-  tabular.parser.record = null;
-  tabular.parser.offset = null;
-  tabular.parser.result = null;
-  tabular.parser.str = null;
+tabular.reset = function() {
+  tabular.state = null;
+  tabular.token = null;
+  tabular.escaped = null;
+  tabular.record = null;
+  tabular.offset = null;
+  tabular.result = null;
+  tabular.str = null;
 };
 
-tabular.parser.next_nonspace = function() {
-  var i = tabular.parser.offset;
+tabular.next_nonspace = function() {
+  var i = tabular.offset;
   var c;
-  while (i < tabular.parser.str.length) {
-    c = tabular.parser.str[i++];
+  while (i < tabular.str.length) {
+    c = tabular.str[i++];
     if (!(c == SPACE || c === TAB )) {
       return c;
     }
@@ -304,24 +291,24 @@ tabular.parser.next_nonspace = function() {
   return null;
 };
 
-tabular.parser.record_begin = function() {
-  tabular.parser.escaped = false;
-  tabular.parser.record = [];
-  tabular.parser.token_begin();
-  tabular.parser.debug("record_begin");
+tabular.record_begin = function() {
+  tabular.escaped = false;
+  tabular.record = [];
+  tabular.token_begin();
+  tabular.debug("record_begin");
 };
 
-tabular.parser.record_end = function() {
-  tabular.parser.state = POST_RECORD;
-  if (!(tabular.parser.IGNORE_RECORD_LENGTH || tabular.parser.RELAXED) && tabular.parser.result.length > 0 && tabular.parser.record.length != tabular.parser.result[0].length) {
-    tabular.parser.error(tabular.parser.ERROR_EOL);
+tabular.record_end = function() {
+  tabular.state = POST_RECORD;
+  if (!(tabular.IGNORE_RECORD_LENGTH || tabular.RELAXED) && tabular.result.length > 0 && tabular.record.length != tabular.result[0].length) {
+    tabular.error(tabular.ERROR_EOL);
   }
-  tabular.parser.result.push(tabular.parser.record);
-  tabular.parser.debug("record end", tabular.parser.record);
-  tabular.parser.record = null;
+  tabular.result.push(tabular.record);
+  tabular.debug("record end", tabular.record);
+  tabular.record = null;
 };
 
-tabular.parser.resolve_type = function(token) {
+tabular.resolve_type = function(token) {
   if (token.match(/^\d+(\.\d+)?$/)) {
     token = parseFloat(token);
   } else if (token.match(/^true|false$/i)) {
@@ -334,37 +321,37 @@ tabular.parser.resolve_type = function(token) {
   return token;
 };
 
-tabular.parser.token_begin = function() {
-  tabular.parser.state = PRE_TOKEN;
-  tabular.parser.token = "";
+tabular.token_begin = function() {
+  tabular.state = PRE_TOKEN;
+  tabular.token = "";
 };
 
-tabular.parser.token_end = function() {
-  if (tabular.parser.DETECT_TYPES) {
-    tabular.parser.token = tabular.parser.resolve_type(tabular.parser.token);
+tabular.token_end = function() {
+  if (tabular.DETECT_TYPES) {
+    tabular.token = tabular.resolve_type(tabular.token);
   }
-  tabular.parser.record.push(tabular.parser.token);
-  tabular.parser.debug("token end", tabular.parser.token);
-  tabular.parser.token_begin();
+  tabular.record.push(tabular.token);
+  tabular.debug("token end", tabular.token);
+  tabular.token_begin();
 };
 
-tabular.parser.debug = function() {
-  if (tabular.parser.DEBUG)
+tabular.debug = function() {
+  if (tabular.DEBUG)
     console.log(arguments);
 };
 
-tabular.parser.dump = function(msg) {
-  return [msg, "at char", tabular.parser.offset, ":", tabular.parser.str.substr(tabular.parser.offset - 50, 50).replace(/\r/mg, "\\r").replace(/\n/mg, "\\n").replace(/\t/mg, "\\t")].join(" ");
+tabular.dump = function(msg) {
+  return [msg, "at char", tabular.offset, ":", tabular.str.substr(tabular.offset - 50, 50).replace(/\r/mg, "\\r").replace(/\n/mg, "\\n").replace(/\t/mg, "\\t")].join(" ");
 };
 
-tabular.parser.error = function(err) {
-  var msg = tabular.parser.dump(err);
-  tabular.parser.reset();
+tabular.error = function(err) {
+  var msg = tabular.dump(err);
+  tabular.reset();
   throw msg;
 };
 
-tabular.parser.warn = function(err) {
-  var msg = tabular.parser.dump(err);
+tabular.warn = function(err) {
+  var msg = tabular.dump(err);
   try {
     console.warn(msg);
     return;
@@ -376,5 +363,5 @@ tabular.parser.warn = function(err) {
   }
 };
 
-tabular.csv2Array = tabular.parser.parse;
-tabular.parseCSV = tabular.parser.parse;
+tabular.csv2Array = tabular.parse;
+tabular.parseCSV = tabular.parse;
