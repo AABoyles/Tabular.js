@@ -4,10 +4,17 @@
   <meta charset="utf-8">
   <title>Tabular.js Unit Tests</title>
   <link rel="stylesheet" href="qunit.css">
-  <script src="../Tabular.js"></script>
+  <script src="../javascripts/Tabular.js"></script>
   <script src="qunit.js"></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/lodash.js/2.4.1/lodash.min.js"></script>
+  <style type="text/css">
+  	table{
+  		display: none;
+  	}
+  </style>
 </head>
 <body>
+  <table style="display:none;"><thead><tr><th>one</th><th>two</th><th>three</th></tr></thead><tbody><tr><td>four</td><td>five</td><td>six</td></tr></tbody><tfoot></tfoot></table>
   <div id="qunit"></div>
   <div id="qunit-fixture"></div>
   <script src="tests.js"></script>
