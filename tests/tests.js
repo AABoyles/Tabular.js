@@ -22,7 +22,7 @@ test("Table to Array of Arrays", function() {
 });
 
 test("Table to Array of Object", function() {
-	ok(_.isEqual(tabular.table2Object(table), object), "Table converts to Object");
+	ok(_.isEqual(tabular.table2ObjectArray(table), object), "Table converts to Object");
 });
 
 test("Table to CSV", function() {

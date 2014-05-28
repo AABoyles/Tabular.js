@@ -11,7 +11,7 @@ $(function() {
 		csv2Table : function(delim, headers) {
 			this.each(function() {
 				$this = jQuery(this);
-				$this.html(tabular.csv2Table($this.text(), delim, headers));
+				$this.text(tabular.csv2Table($this.text(), delim, headers));
 			});
 			return this;
 		},

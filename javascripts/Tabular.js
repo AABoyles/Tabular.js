@@ -24,7 +24,7 @@ tabular.table2Array = function(table) {
   return rows;
 };
 
-tabular.table2Object = function(table) {
+tabular.table2ObjectArray = function(table) {
   var rowEls = table.getElementsByTagName("tr");
   var rawcells = rowEls[0].getElementsByTagName("th");
   var titles = [];

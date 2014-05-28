@@ -15,7 +15,7 @@
 	</head>
 	<body>
 		<header>
-			<h1><a href="http://aaboyles.com/Tabular.js" style="color:white;">Tabular.js</a></h1>
+			<h1><a href="http://aaboyles.github.io/Tabular.js" style="color:white;">Tabular.js</a></h1>
 			<p>A small Javascript library for playing with CSVs</p>
 		</header>
 		<div id="banner">
@@ -78,7 +78,7 @@ container.innerHTML = tableHTML;
 				<h2><a name="table2Array" class="anchor" href="#table2Array"><span class="octicon octicon-link"></span></a>table2Array(table)</h2>
 				<p>Given a table element, return a 2-dimensional array.</p>
 
-				<h2><a name="table2Object" class="anchor" href="#table2Object"><span class="octicon octicon-link"></span></a>table2Object(table)</h2>
+				<h2><a name="table2Object" class="anchor" href="#table2Object"><span class="octicon octicon-link"></span></a>table2ObjectArray(table)</h2>
 				<p>Given a table element, return an array of objects mapping the first row (presumably titles) to the given row's corresponding value.</p>
 
 				<h2><a name="table2CSV" class="anchor" href="#table2CSV"><span class="octicon octicon-link"></span></a>table2CSV(table)</h2>
@@ -91,11 +91,9 @@ container.innerHTML = tableHTML;
 				<p>Given a CSV string, a delimiter string, and a boolean indicating the presence of headers in the CSV string, return an HTML table string</p>
 
 				<h2><a name="csv2Array" class="anchor" href="#csv2Array"><span class="octicon octicon-link"></span></a>csv2Array(csv, delim)</h2>
-				<p><strong>This is NOT Implemented!</strong></p>
 				<p>Given a CSV string and a delimiter string, return a 2 dimensional javascript array.</p>
 
-				<h2><a name="csv2Object" class="anchor" href="#csv2Object"><span class="octicon octicon-link"></span></a>csv2Object(csv, delim)</h2>
-				<p><strong>This is NOT Implemented!</strong></p>
+				<h2><a name="csv2Object" class="anchor" href="#csv2ObjectArray"><span class="octicon octicon-link"></span></a>csv2Object(csv, delim)</h2>
 				<p>Given a CSV string and a delimiter string, return a javascript object.</p>
 
 				<h1><a name="jQueryFunctions" class="anchor" href="#jqueryfunctions"><span class="octicon octicon-link"></span></a>jQuery Functions</h1>
@@ -103,12 +101,15 @@ container.innerHTML = tableHTML;
 
 				<h2><a name="jQcsv2Table" class="anchor" href="#jQcsv2Table"><span class="octicon octicon-link"></span></a>csv2Table(delim, headers)</h2>
 				<p>Transforms the element upon which it was called into a table.  Assumes it contains CSV-parsable content.</p>
+				<p>This may seem a little silly at first, but the intent is to provide a seamless route from a textarea into which users paste CSV text to parsed, fully functional table.  A Demonstration of this general principle is given in <a href="../examples/csv2Table.html">this example.</a></p>
 
 				<h2><a name="jQtable2CSV" class="anchor" href="#jQtable2CSV"><span class="octicon octicon-link"></span></a>table2CSV(delim)</h2>
-				<p>Returns an array of each selected tables' CSV-encoded contents</p>
+				<p>Returns the selected tables' CSV-encoded contents.</p>
+				<p>If the selector refers to multiple elements, returns an array of CSV strings.</p>
 
 				<h2><a name="jQdownloadTable" class="anchor" href="#jQdownloadTable"><span class="octicon octicon-link"></span></a>downloadTable(format, send)</h2>
 				<p>Returns an array of URL-encoded CSV Strings for use in downloadable links</p>
+				<p>If the selector refers to multiple elements, returns an array of CSV-url strings.</p>
 
 			</section>
 			<footer>
